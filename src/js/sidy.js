@@ -1,11 +1,11 @@
 /**
  * global jQuery
  * !
- * Sidy.js v0.9.0
- * https://github.com/reactivestudio/sidy.js
+ * Sidy.js v1.1.0
+ * https://github.com/reactivestudio/Sidy.js
  *
  * Sidy.js is a responsive off-, on- canvas sidebar navigation
- * using CSS transforms & transitions.
+ * using CSS3 transforms & transitions.
  *
  * Licensed under the MIT license.
  * http://www.opensource.org/licenses/mit-license.php
@@ -14,7 +14,7 @@
  * http://www.reactivestudio.ru, https://twitter.com/reactive_studio
  * by Dmitriy Bushin dima.bushin@gmail.com
  *
- * Thanks to Codrops http://www.codrops.com - for the inspiration and ideas.
+ * Thanks to Codrops http://tympanus.net/codrops for the inspiration and ideas.
  */
 
 ;(function ( $, window, document, undefined ) {
@@ -69,659 +69,336 @@
 
 	// Fx constructor.
 	function Fx () {
-		var states = {
-			opened: {},
-			closed: {},
-			init: {}
+		var elements = {
+				container: {},
+				pusher:    {},
+				panel:     {}
+			};
+
+		this._toggleSize = function(size) {
+			return (size.charAt(0) === '-')? size.substr(1) : '-'+size;
+		};
+
+		this._cssTranslate3d = function(x, y, z) {
+			return {
+				webkitTransform: 'translate3d('+x+', '+y+', '+z+')',
+				transform:       'translate3d('+x+', '+y+', '+z+')',
+			};
+		};
+
+		this._cssTransition = function(duration, easing) {
+			return {
+				webkitTransition: '-webkit-transform '+duration+'s '+easing,
+				transition: 'transform '+duration+'s '+easing
+			};
+		};
+
+		this._getPosition = function(position, size, offset) {
+			var parameters = {
+					opened: {
+						x: 0,
+						y: 0,
+					},
+					closed: {
+						x: 0,
+						y: 0,
+					},
+					panelCssRules: {},
+				};
+
+			switch (position) {
+				case 'left':
+					parameters.opened.x = size;
+					parameters.closed.x = this._toggleSize(offset);
+					parameters.panelCssRules = {
+						top: 0,
+						left: 0,
+						height: '100%',
+						width: size
+					};
+					break;
+
+				case 'right':
+					parameters.opened.x = this._toggleSize(size);
+					parameters.closed.x = offset;
+					parameters.panelCssRules = {
+						top: 0,
+						right: 0,
+						height: '100%',
+						width: size
+					};
+					break;
+
+				case 'top':
+					parameters.opened.y = size;
+					parameters.closed.y = this._toggleSize(offset);
+					parameters.panelCssRules = {
+						top: 0,
+						height: size,
+						width: '100%'
+					};
+					break;
+
+				case 'bottom':
+					parameters.opened.y = this._toogleSize(size);
+					parameters.closed.y = offset;
+					parameters.panelCssRules = {
+						bottom:0,
+						height: size,
+						width: '100%'
+					};
+					break;
+			};
+
+			return parameters;
 		};
 
 		// Fx template output
 		this.output = {
-			cssRules: {
-				pusher: $.extend( {}, states),
-				panel: $.extend( {}, states),
-				container: $.extend( {}, states),
+			css: {
+				opened: $.extend( {}, elements ),
+				closed: $.extend( {}, elements ),
 			},
-			cssClasses: {
-				pusher: $.extend( {}, states),
-				panel: $.extend( {}, states),
-				container: $.extend( {}, states),
-			},
-				inPusher: false,
+			inPusher:  false,
+			afterNone: false,
 		};
 	};
 	Fx.prototype = {
 		/* Effect 1: Slide overlay */
 		slide_overlay: function (position, size, duration, easing) {
-			var panel = $.extend(true, {}, this.output),
-				x, y, p = {};
+			var options = $.extend(true, {}, this.output),
+				p = this._getPosition(position, size, '100%');
 
-			switch (position) {
-				case 'left':
-					x = size;
-					y = 0;
-					p = {
-						top: 0,
-						left: 0,
-						height: '100%',
-						width: size
-					};
-					break;
+			options.css.opened.panel = $.extend(
+				{},
+				{visibility: 'visible'},
+				this._cssTranslate3d(0, 0, 0),
+				p.panelCssRules
+			);
 
-				case 'right':
-					x = '-'+size;
-					y = 0;
-					p = {
-						top: 0,
-						right: 0,
-						height: '100%',
-						width: size
-					};
-					break;
+			options.css.closed.panel = $.extend(
+				{},
+				// {visibility: 'visible'},
+				this._cssTranslate3d(p.closed.x, p.closed.y, 0),
+				p.panelCssRules
+			);
 
-				case 'top':
-					x = 0;
-					y = '-'+size;
-					p = {
-						top: 0,
-						height: size,
-						width: '100%'
-					};
-					break;
+			options.inPusher  = false;
+			options.afterNone = true;
 
-				case 'bottom':
-					x = 0;
-					y = size;
-					p = {
-						bottom: 0,
-						height: size,
-						width: '100%'
-					};
-					break;
-			};
-
-			panel.cssRules.panel.opened = $.extend( {}, {
-				visibility: 'visible',
-				'-webkit-transform': 'translate3d(0, 0, 0)',
-				transform: 'translate3d(0, 0, 0)',
-				// '-webkit-transition': '-webkit-transform '+duration+'s '+easing,
-				// transition: 'transform '+duration+'s '+easing
-			}, p);
-			panel.cssRules.panel.closed = $.extend( {}, {
-				visibility: 'visible',
-				'-webkit-transform': 'translate3d(-100%, 0, 0)',
-				transform: 'translate3d(-100%, 0, 0)',
-				// '-webkit-transition': '-webkit-transform '+duration+'s '+easing,
-				// transition: 'transform '+duration+'s '+easing
-			}, p);
-
-			panel.cssClasses.panel.init = [classes.afterNone];
-
-			panel.inPusher = false;
-
-			return panel;
+			return options;
 		},
 
 		/* Effect 2: Reveal */
 		reveal: function (position, size, duration, easing) {
-			var panel = $.extend(true, {}, this.output),
-				x, y, p = {};
+			var options = $.extend(true, {}, this.output),
+				p = this._getPosition(position, size, '100%');
 
-			switch (position) {
-				case 'left':
-					x = size;
-					y = 0;
-					p = {
-						top: 0,
-						left: 0,
-						height: '100%',
-						width: size
-					};
-					break;
+			options.css.opened.pusher = $.extend(
+				{},
+				{visibility: 'visible'},
+				this._cssTranslate3d(p.opened.x, p.opened.y, 0)
+			);
 
-				case 'right':
-					x = '-'+size;
-					y = 0;
-					p = {
-						top: 0,
-						right: 0,
-						height: '100%',
-						width: size
-					};
-					break;
+			options.css.opened.panel = $.extend(
+				{},
+				{visibility: 'visible', zIndex: 1},
+				this._cssTransition(duration, easing),
+				p.panelCssRules
+			);
 
-				case 'top':
-					x = 0;
-					y = '-'+size;
-					p = {
-						top: 0,
-						height: size,
-						width: '100%'
-					};
-					break;
+			options.css.closed.panel = $.extend(
+				{},
+				{zIndex: 1},
+				p.panelCssRules
+			);
 
-				case 'bottom':
-					x = 0;
-					y = size;
-					p = {
-						bottom: 0,
-						height: size,
-						width: '100%'
-					};
-					break;
-			};
+			options.inPusher  = false;
+			options.afterNone = true;
 
-			panel.cssRules.pusher.opened = {
-				'-webkit-transform': 'translate3d('+x+', '+y+', 0)',
-				transform: 'translate3d('+x+', '+y+', 0)'
-			};
-
-			panel.cssRules.panel.opened = $.extend( {}, {
-				'z-index': 1,
-				visibility: 'visible',
-				'-webkit-transition': '-webkit-transform '+duration+'s '+easing,
-				transition: 'transform '+duration+'s '+easing
-			}, p);
-			panel.cssRules.panel.closed = $.extend( {}, {'z-index': 1}, p);
-
-			panel.cssClasses.panel.init = [classes.afterNone];
-
-			return panel;
+			return options;
 		},
 
 		/* Effect 3: Push */
 		push: function (position, size, duration, easing) {
-			var panel = $.extend( true, {}, this.output ),
-				x1, y1, x2, y2, p = {};
+			var options = $.extend(true, {}, this.output),
+				p = this._getPosition(position, size, '100%');
 
-			switch (position) {
-				case 'left':
-					x1 = size;
-					x2 = '-100%';
-					y1 = y2 = 0;
-					p = {
-						top: 0,
-						left: 0,
-						height: '100%',
-						width: size
-					};
-					break;
+			options.css.opened.pusher = $.extend(
+				{},
+				this._cssTranslate3d(p.opened.x, p.opened.y, 0)
+			);
 
-				case 'right':
-					x1 = '-'+size;
-					x2 = '100%';
-					y1 = y2 = 0;
-					p = {
-						top: 0,
-						right: 0,
-						height: '100%',
-						width: size
-					};
-					break;
+			options.css.opened.panel = $.extend(
+				{},
+				{visibility: 'visible'},
+				this._cssTransition(duration, easing),
+				this._cssTranslate3d(p.closed.x, p.closed.y, 0),
+				p.panelCssRules
+			);
 
-				case 'top':
-					x1 = x2 = 0;
-					y1 = '-'+size;
-					y2 = '100%';
-					p = {
-						top: 0,
-						height: size,
-						width: '100%'
-					};
-					break;
+			options.css.closed.panel = $.extend(
+				{},
+				this._cssTranslate3d(p.closed.x, p.closed.y, 0),
+				p.panelCssRules
+			);
 
-				case 'bottom':
-					x1 = x2 = 0;
-					y1 = size;
-					y2 = '-100%';
-					p = {
-						bottom: 0,
-						height: size,
-						width: '100%'
-					};
-					break;
-			};
+			options.inPusher  = true;
+			options.afterNone = true;
 
-			panel.cssRules.pusher.opened = {
-				'-webkit-transform': 'translate3d('+x1+', '+y1+', 0)',
-				transform: 'translate3d('+x1+', '+y1+', 0)'
-			};
-
-			panel.cssRules.panel.opened = $.extend( {}, {
-				'-webkit-transform': 'translate3d('+x2+', '+y2+', 0)',
-				transform: 'translate3d('+x2+', '+y2+', 0)',
-				visibility: 'visible',
-				'-webkit-transition': '-webkit-transform '+duration+'s '+easing,
-				transition: 'transform '+duration+'s '+easing
-			}, p);
-			panel.cssRules.panel.closed = $.extend( {}, {
-				'-webkit-transform': 'translate3d('+x2+', '+y2+', 0)',
-				transform: 'translate3d('+x2+', '+y2+', 0)'
-			}, p);
-
-			panel.cssClasses.panel.init = [classes.afterNone];
-
-			panel.inPusher = true;
-
-			return panel;
+			return options;
 		},
 
 		/* Effect 4: Slide Along */
 		slide_along: function (position, size, duration, easing) {
-			var panel = $.extend( true, {}, this.output ),
-				x, y, p = {};
+			var options = $.extend(true, {}, this.output),
+				p = this._getPosition(position, size, '50%');
 
-			switch (position) {
-				case 'left':
-					x = size;
-					y = 0;
-					p = {
-						top: 0,
-						left: 0,
-						height: '100%',
-						width: size
-					};
-					break;
+			options.css.opened.pusher = $.extend(
+				{},
+				this._cssTranslate3d(p.opened.x, p.opened.y, 0)
+			);
 
-				case 'right':
-					x = '-'+size;
-					y = 0;
-					p = {
-						top: 0,
-						right: 0,
-						height: '100%',
-						width: size
-					};
-					break;
+			options.css.opened.panel = $.extend(
+				{},
+				{visibility: 'visible', zIndex: 1},
+				this._cssTransition(duration, easing),
+				this._cssTranslate3d(0, 0, 0),
+				p.panelCssRules
+			);
 
-				case 'top':
-					x = 0;
-					y = '-'+size;
-					p = {
-						top: 0,
-						height: size,
-						width: '100%'
-					};
-					break;
+			options.css.closed.panel = $.extend(
+				{},
+				{zIndex: 1},
+				this._cssTranslate3d(p.closed.x, p.closed.y, 0),
+				p.panelCssRules
+			);
 
-				case 'bottom':
-					x = 0;
-					y = size;
-					p = {
-						bottom: 0,
-						height: size,
-						width: '100%'
-					};
-					break;
-			};
+			options.inPusher  = false;
+			options.afterNone = true;
 
-			panel.cssRules.pusher.opened = {
-				'-webkit-transform': 'translate3d('+x+', '+y+', 0)',
-				transform: 'translate3d('+x+', '+y+', 0)'
-			};
-
-			panel.cssRules.panel.opened = $.extend( {}, {
-				'z-index': 1,
-				visibility: 'visible',
-				'-webkit-transform': 'translate3d(0, 0, 0)',
-				transform: 'translate3d(0, 0, 0)',
-				// '-webkit-transition': '-webkit-transform '+duration+'s '+easing,
-				// transition: 'transform '+duration+'s '+easing
-			}, p);
-			panel.cssRules.panel.closed = $.extend( {}, {
-				'z-index': 1,
-				'-webkit-transform': 'translate3d(-50%, 0, 0)',
-				transform: 'translate3d(-50%, 0, 0)'
-			}, p);
-
-			panel.cssClasses.panel.init = [classes.afterNone];
-
-			panel.inPusher = false;
-
-			return panel;
+			return options;
 		},
 
 		/* Effect 5: Slide Reverse */
 		slide_reverse: function (position, size, duration, easing) {
-			var panel = $.extend( true, {}, this.output ),
-				x, y, p = {};
+			var options = $.extend(true, {}, this.output),
+				p = this._getPosition(position, size, '-50%');
 
-			switch (position) {
-				case 'left':
-					x = size;
-					y = 0;
-					p = {
-						top: 0,
-						left: 0,
-						height: '100%',
-						width: size
-					};
-					break;
+			options.css.opened.pusher = $.extend(
+				{},
+				this._cssTranslate3d(p.opened.x, p.opened.y, 0)
+			);
 
-				case 'right':
-					x = '-'+size;
-					y = 0;
-					p = {
-						top: 0,
-						right: 0,
-						height: '100%',
-						width: size
-					};
-					break;
+			options.css.opened.panel = $.extend(
+				{},
+				{visibility: 'visible', zIndex: 1},
+				this._cssTransition(duration, easing),
+				this._cssTranslate3d(0, 0, 0),
+				p.panelCssRules
+			);
 
-				case 'top':
-					x = 0;
-					y = '-'+size;
-					p = {
-						top: 0,
-						height: size,
-						width: '100%'
-					};
-					break;
+			options.css.closed.panel = $.extend(
+				{},
+				{zIndex: 1},
+				this._cssTranslate3d(p.closed.x, p.closed.y, 0),
+				p.panelCssRules
+			);
 
-				case 'bottom':
-					x = 0;
-					y = size;
-					p = {
-						bottom: 0,
-						height: size,
-						width: '100%'
-					};
-					break;
-			};
+			options.inPusher  = false;
+			options.afterNone = true;
 
-			panel.cssRules.pusher.opened = {
-				webkitTransform: 'translate3d('+x+', '+y+', 0)',
-				transform: 'translate3d('+x+', '+y+', 0)'
-			};
-
-			panel.cssRules.panel.opened = $.extend( {}, {
-				zIndex: 1,
-				visibility: 'visible',
-				webkitTransform: 'translate3d(0, 0, 0)',
-				transform: 'translate3d(0, 0, 0)',
-				webkitTransition: '-webkit-transform '+duration+'s '+easing,
-				transition: 'transform '+duration+'s '+easing
-			}, p);
-			panel.cssRules.panel.closed = $.extend( {}, {
-				zIndex: 1,
-				webkitTransform: 'translate3d(50%, 0, 0)',
-				transform: 'translate3d(50%, 0, 0)'
-			}, p);
-
-			panel.cssClasses.panel.init = [];
-
-			panel.inPusher = false;
-
-			return panel;
+			return options;
 		},
 
-		/* Effect 6: 3D Rotate In */
-		rotate_in: function (position, size, duration, easing) {
-			var panel = $.extend( true, {}, this.output ),
-				x, y, p = {};
-
-			switch (position) {
-				case 'left':
-					x = size;
-					y = 0;
-					p = {
-						top: 0,
-						left: 0,
-						height: '100%',
-						width: size
-					};
-					break;
-
-				case 'right':
-					x = '-'+size;
-					y = 0;
-					p = {
-						top: 0,
-						right: 0,
-						height: '100%',
-						width: size
-					};
-					break;
-
-				case 'top':
-					x = 0;
-					y = '-'+size;
-					p = {
-						top: 0,
-						height: size,
-						width: '100%'
-					};
-					break;
-
-				case 'bottom':
-					x = 0;
-					y = size;
-					p = {
-						bottom: 0,
-						height: size,
-						width: '100%'
-					};
-					break;
-			};
-
-			panel.cssRules.container.init = {
-				webkitPerspective: '1500px',
-				perspective: '1500px',
-				webkitPerspectiveOrigin: '0% 50%',
-				perspectiveOrigin: '0% 50%',
-			};
-
-			panel.cssRules.pusher.opened = {
-				webkitTransform: 'translate3d('+x+', '+y+', 0)',
-				transform: 'translate3d('+x+', '+y+', 0)',
-				webkitTransformStyle: 'preserve-3d',
-				transformStyle: 'preserve-3d'
-			};
-			panel.cssRules.pusher.closed = {
-				webkitTransformStyle: 'preserve-3d',
-				transformStyle: 'preserve-3d'
-			};
-
-			panel.cssRules.panel.opened = $.extend( {}, {
-				visibility: 'visible',
-				webkitTransform: 'translate3d(-100%, 0, 0)  rotateY(0deg)',
-				transform: 'translate3d(-100%, 0, 0)  rotateY(0deg)',
-				webkitTransition: '-webkit-transform '+duration+'s '+easing,
-				transition: 'transform '+duration+'s '+easing,
-				webkitTransformStyle: 'preserve-3d',
-				transformStyle: 'preserve-3d'
-			}, p);
-			panel.cssRules.panel.closed = $.extend( {}, {
-				webkitTransform: 'translate3d(-100%, 0, 0) rotateY(-90deg)',
-				transform: 'translate3d(-100%, 0, 0) rotateY(-90deg)',
-				webkitPerspectiveOrigin: '100% 50%',
-				perspectiveOrigin: '100% 50%',
-				webkitTransformStyle: 'preserve-3d',
-				transformStyle: 'preserve-3d'
-			}, p);
-
-			panel.cssClasses.panel.init = [];
-
-			panel.inPusher = false;
-
-			return panel;
-		},
-
-		/* Effect 7: Scale Down */
+		/* Effect 6: Scale Down */
 		scale_down: function (position, size, duration, easing) {
-			var panel = $.extend( true, {}, this.output ),
-				x, y, p = {};
+			var options = $.extend(true, {}, this.output),
+				p = this._getPosition(position, size, '100%');
 
-			switch (position) {
-				case 'left':
-					x = size;
-					y = 0;
-					p = {
-						top: 0,
-						left: 0,
-						height: '100%',
-						width: size
-					};
-					break;
+			options.css.opened.container = $.extend(
+				{},
+				{webkitPerspective: '1500px', perspective: '1500px'}
+			);
 
-				case 'right':
-					x = '-'+size;
-					y = 0;
-					p = {
-						top: 0,
-						right: 0,
-						height: '100%',
-						width: size
-					};
-					break;
+			options.css.opened.pusher = $.extend(
+				{},
+				{
+					webkitTransformStyle: 'preserve-3d',
+					transformStyle:       'preserve-3d'
+				},
+				this._cssTranslate3d(0, 0, '-300px')
+			);
 
-				case 'top':
-					x = 0;
-					y = '-'+size;
-					p = {
-						top: 0,
-						height: size,
-						width: '100%'
-					};
-					break;
+			options.css.opened.panel = $.extend(
+				{},
+				{visibility: 'visible'},
+				this._cssTransition(duration, easing),
+				this._cssTranslate3d(0, 0, 0),
+				p.panelCssRules
+			);
 
-				case 'bottom':
-					x = 0;
-					y = size;
-					p = {
-						bottom: 0,
-						height: size,
-						width: '100%'
-					};
-					break;
-			};
+			options.css.closed.panel = $.extend(
+				{},
+				{opacity: 1},
+				this._cssTranslate3d(p.closed.x, p.closed.y, 0),
+				p.panelCssRules
+			);
 
-			panel.cssRules.container.opened = {
-				'-webkit-perspective': '1500px',
-				perspective: '1500px'
-			};
+			options.inPusher  = false;
+			options.afterNone = true;
 
-			panel.cssRules.pusher.opened = {
-				'-webkit-transform': 'translate3d(0, 0, -300px)',
-				transform: 'translate3d(0, 0, -300px)',
-				'-webkit-transform-style': 'preserve-3d',
-				'transform-style': 'preserve-3d'
-			};
-
-			panel.cssRules.panel.opened = $.extend( {}, {
-				visibility: 'visible',
-				'-webkit-transform': 'translate3d(0, 0, 0)',
-				transform: 'translate3d(0, 0, 0)',
-				'-webkit-transition': '-webkit-transform '+duration+'s '+easing,
-				transition: 'transform '+duration+'s '+easing
-			}, p);
-			panel.cssRules.panel.closed = $.extend( {}, {
-				opacity: 1,
-				'-webkit-transform': 'translate3d(-100%, 0, 0)',
-				transform: 'translate3d(-100%, 0, 0)'
-			}, p);
-
-			panel.cssClasses.panel.init = [classes.afterNone];
-
-			panel.inPusher = false;
-
-			return panel;
+			return options;
 		},
 
-		/* Effect 8: Scale Up */
+		/* Effect 7: Scale Up */
 		scale_up: function (position, size, duration, easing) {
-			var panel = $.extend( true, {}, this.output ),
-				x, y, z, p = {};
+			var options = $.extend(true, {}, this.output),
+				p = this._getPosition(position, size, '100%');
 
-			switch (position) {
-				case 'left':
-					x = size;
-					y = 0;
-					z = '-'+size;
-					p = {
-						top: 0,
-						left: 0,
-						height: '100%',
-						width: size
-					};
-					break;
+			options.css.opened.container = $.extend(
+				{},
+				{
+					webkitPerspective: '1500px',
+					perspective: '1500px',
+					webkitPerspectiveOrigin: '0% 50%',
+					perspectiveOrigin: '0% 50%'
+				}
+			);
 
-				case 'right':
-					x = '-'+size;
-					y = 0;
-					z = '-'+size;
-					p = {
-						top: 0,
-						right: 0,
-						height: '100%',
-						width: size
-					};
-					break;
+			options.css.opened.pusher = $.extend(
+				{},
+				this._cssTranslate3d(p.opened.x, p.opened.y, 0)
+			);
 
-				case 'top':
-					x = 0;
-					y = '-'+size;
-					z = '-'+size;
-					p = {
-						top: 0,
-						height: size,
-						width: '100%'
-					};
-					break;
+			options.css.opened.panel = $.extend(
+				{},
+				{visibility: 'visible', opacity: 1, zIndex: 1},
+				this._cssTransition(duration, easing),
+				this._cssTranslate3d(0, 0, 0),
+				p.panelCssRules
+			);
 
-				case 'bottom':
-					x = 0;
-					y = size;
-					z = '-'+size;
-					p = {
-						bottom: 0,
-						height: size,
-						width: '100%'
-					};
-					break;
-			};
+			options.css.closed.panel = $.extend(
+				{},
+				{opacity: 1, zIndex: 1},
+				this._cssTranslate3d(0, 0, '-300px'),
+				p.panelCssRules
+			);
 
-			panel.cssRules.container.opened = {
-				webkitPerspective:       '1500px',
-				perspective:             '1500px',
-				webkitPerspectiveOrigin: '0% 50%',
-				perspectiveOrigin:       '0% 50%'
-			};
+			options.inPusher  = false;
+			options.afterNone = false;
 
-			panel.cssRules.pusher.opened = {
-				webkitTransform: 'translate3d('+x+', '+y+', 0)',
-				transform:       'translate3d('+x+', '+y+', 0)'
-			};
-
-			panel.cssRules.panel.opened = $.extend( {}, {
-				zIndex:           1,
-				visibility:       'visible',
-				webkitTransform:  'translate3d(0, 0, 0)',
-				transform:        'translate3d(0, 0, 0)',
-				webkitTransition: '-webkit-transform '+duration+'s '+easing,
-				transition:       'transform '+duration+'s '+easing
-			}, p);
-			panel.cssRules.panel.closed = $.extend( {}, {
-				zIndex:          1,
-				opacity:         1,
-				webkitTransform: 'translate3d(0, 0, '+z+')',
-				transform:       'translate3d(0, 0, '+z+')'
-			}, p);
-
-			panel.cssClasses.panel.init = [classes.afterNone];
-
-			panel.inPusher = false;
-
-			return panel;
+			return options;
 		},
 	};
 
 	// Panels constructor.
 	function Panels (panelClass, Fx) {
 		var self = this;
+
 		$('.' + panelClass).each(function() {
-			var optionsHTML = {
+			var optionsFromHTML = {
 					position: $(this).attr('data-position'),
 					size: $(this).attr('data-size'),
 					fx: $(this).attr('data-fx'),
@@ -730,7 +407,7 @@
 				},
 				o = $.extend( {},
 					defaults.panel,
-					optionsHTML
+					optionsFromHTML
 				);
 
 			if (!(o.fx in Fx)) {
@@ -753,6 +430,7 @@
 		this.fx = new Fx(); // Get fx methods
 		this.panels = new Panels(classes.panel, this.fx); // Get panels
 
+		console.log(this.panels);
         var sidy = this;
 		sidy.init();
 	};
@@ -774,17 +452,14 @@
 
 			// Panels and add some classes.
 			$.each(sidy.panels, function(id, options) {
-				var $div,
-					$pusher = $('.' + classes.pusher),
-					$content = $('.' + classes.content);
-
-				$div = (options.inPusher) ? $content : $pusher;
+				var $pusher  = $('.' + classes.pusher),
+					$content = $('.' + classes.content),
+					$div = (options.inPusher) ? $content : $pusher;
 
 				$div.before(options.html);
 				$('#'+id)
-					.css(options.cssRules.panel.closed)
-					.addClass(classes.disabled)
-					.addClass(options.cssClasses.panel.init.join(" "));
+					.css(options.css.closed.panel)
+					.addClass(classes.disabled);
 			});
 
 			// Get all buttons objects
@@ -802,10 +477,10 @@
 			});
 		},
 
-		openPanel: function(event, idPanelToOpen, panel) {
+		openPanel: function(event, idPanelToOpen, options) {
             var sidy = this,
-				$panel = $("#" + idPanelToOpen),
-				$container = $('.' + classes.container);
+				$panel = $("#"+idPanelToOpen),
+				$container = $('.'+classes.container);
 
             // Some magic with disabling multiple events.
             event.stopPropagation();
@@ -813,44 +488,41 @@
 
             // Enable panel, apply classes for opening panel with fx.
             $panel.removeClass(classes.disabled);
+			$('.'+classes.container).css(options.css.opened.container);
             setTimeout(function() {
-				$('.' + classes.container).css(panel.cssRules.container.opened);
-				$panel.attr('style', '');
-				$panel.css(panel.cssRules.panel.opened);
-				$container.addClass(classes.opened);
+				$('.'+classes.container).addClass(classes.opened);
+				$panel.attr('style', '').css(options.css.opened.panel);
 				setTimeout(function() {
-					// $('.' + classes.pusher).addClass(classes.pusherOpened);
-					$('.' + classes.pusher).attr('style', '');
-					$('.' + classes.pusher).css(panel.cssRules.pusher.opened);
+					$('.'+classes.pusher).attr('style', '').css(options.css.opened.pusher);
 				}, 25);
-            }, 5);
+            }, 1);
 
 
             // Adding event listeners for closing panel.
             // Close panel if there is a click in nonactive panel area.
             $(document).on(eventtype, function(evt){
                 if (! hasParentClass(evt.target, classes.panel)) {
-                    sidy.closePanel($panel, panel);
+                    sidy.closePanel($panel, options);
                     $(this).off();
                 };
             });
 
             // Close panel if there is a close- button or link.
             sidy.$buttonsClose.on(eventtype, function(event) {
-                sidy.closePanel($panel, panel);
+                sidy.closePanel($panel, options);
                 $(this).off();
             });
         },
 
-        closePanel: function($panel, panel) {
-            $panel.attr('style', '');
-            $panel.css(panel.cssRules.panel.closed);
-            $('.' + classes.container).removeClass(classes.opened);
-            $('.' + classes.pusher).attr('style', '');
-			$('.' + classes.pusher).css(panel.cssRules.pusher.closed);
+        closePanel: function($panel, options) {
+            $panel.attr('style', '').css(options.css.closed.panel);
+            $('.'+classes.container).removeClass(classes.opened);
+			$('.'+classes.pusher).attr('style', '').css(options.css.closed.pusher);
+
             setTimeout(function() {
+					$('.'+classes.container).attr('style', '');
                     $panel.addClass(classes.disabled);
-                }, panel.duration*1000 // duration of transition in milliseconds
+                }, options.duration*1000 // duration of transition in milliseconds
             );
         }
 	};
@@ -875,6 +547,3 @@
         // $('body').append('<iframe src="http://data.fotorama.io/?version=' + fotoramaVersion + '" style="display: none;"></iframe>');
 	});
 })( typeof jQuery !== 'undefined' && jQuery, window, document );
-
-
-
