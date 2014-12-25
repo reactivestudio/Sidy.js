@@ -1,0 +1,5 @@
+src/vendors
+__*
+src/.sass-cache
+.DS_Store
+.git

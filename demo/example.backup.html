@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+	<head>
+		<link rel="shortcut icon" href="../favicon.ico">
+		<link rel="stylesheet" type="text/css" href="../src/css/normalize.css" />
+		<link rel="stylesheet" type="text/css" href="../src/css/demo.css" />
+		<link rel="stylesheet" type="text/css" href="../src/css/icons.css" />
+		<link rel="stylesheet" type="text/css" href="../src/css/component.css" />
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+		<script src="../src/js/modernizr.custom.js"></script>
+	</head>
+	<body>
+		<!-- Main PushAndSlide wrapper of all panels and content -->
+		<div class="sidy__container">
+
+			<!-- All panels with slide- effects goes here.
+				These panels will be on top of the PUSHER wrapper.
+				Every panel must consist id, .ps-panel, .ps-disable classes
+				and .ps-fx--slide- class.
+			-->
+			<nav
+			data-position="left"
+			data-size="30%"
+			data-fx="reveal"
+			class="sidy__panel sidy__panel--disabled"
+			id="cart">
+				<h2 class="icon icon-lab">Sidebar</h2>
+				<ul>
+					<li><a class="icon icon-data" href="#">Data Management</a></li>
+					<li><a class="icon icon-location" href="#">Location</a></li>
+					<li><a class="icon icon-study" href="#">Study</a></li>
+				</ul>
+			</nav>
+
+
+			<!-- Content push wrapper -->
+			<div class="sidy__pusher">
+
+				<!-- All panels with push- effects goes here.
+					These panels will be on top of the CONTENT wrapper.
+					Every panel must consist id, .ps-panel, .ps-disable classes
+					and .ps-fx--push- class.
+				-->
+				<nav
+				data-position="left"
+				data-size="300px"
+				data-fx="push"
+				class="sidy__panel sidy__panel--disabled"
+				id="cart1">
+					<h2 class="icon icon-lab">Sidebar</h2>
+					<ul>
+						<li><a class="icon icon-data" href="#">11111Data Management</a></li>
+						<li><a class="icon icon-location" href="#">Location</a></li>
+						<li><a class="icon icon-study" href="#">Study</a></li>
+						<li><a class="icon icon-wallet" href="#">Credits</a></li>
+					</ul>
+				</nav>
+
+				<nav
+				data-position="right"
+				data-size="50%"
+				data-fx="push"
+				class="sidy__panel sidy__panel--disabled"
+				id="contacts">
+					<h2 class="icon icon-lab">Sidebar</h2>
+					<ul>
+						<li><a class="icon icon-data sidy--close" href="#">Data Management</a></li>
+						<li><a class="icon icon-location" href="#">Location</a></li>
+						<li><a class="icon icon-study" href="#">Study</a></li>
+						<li><a class="icon icon-photo" href="#">Collections</a></li>
+						<li><a class="icon icon-wallet" href="#">Credits</a></li>
+					</ul>
+				</nav>
+
+
+
+
+
+				<!-- this is the wrapper for the content -->
+				<div class="sidy__content">
+					<header class="codrops-header">
+						<h1>Panels Transitions <span>Transition effects for off-canvas views</span></h1>
+					</header>
+					<div class="main clearfix">
+						<div id="st-trigger-effects" class="column">
+							<button data-effect="st-effect-1" class="ps-button">Slide in on top</button>
+							<button data-panel="cart" class="sidy--open">Reveal</button>
+							<button data-panel="contacts" class="sidy--open">Push</button>
+							<button data-panel="cart1" class="sidy--open">Push another</button>
+						</div>
+					</div><!-- /main -->
+				</div><!-- /st-content -->
+			</div><!-- /st-pusher -->
+		</div><!-- /st-container -->
+		<script src="../src/js/sidy.js"></script>
+	</body>
+</html>
