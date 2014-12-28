@@ -1,20 +1,17 @@
-/**
- * global jQuery
- * !
+/**!
+ * Sidy.js is jQuery plugin for responsive off-, on- canvas
+ * sidebar navigation using CSS3 transforms & transitions.
+ *
+ * Copyright 2014, Reactive Studio, by Dmitriy Bushin
+ * dima.bushin@gmail.com
+ * MIT licensed.
+ *
  * Sidy.js v1.1.0
  * https://github.com/reactivestudio/Sidy.js
+ * https://twitter.com/reactive_studio
  *
- * Sidy.js is a responsive off-, on- canvas sidebar navigation
- * using CSS3 transforms & transitions.
- *
- * Licensed under the MIT license.
- * http://www.opensource.org/licenses/mit-license.php
- *
- * Copyright 2014, Reactive Studio
- * http://www.reactivestudio.ru, https://twitter.com/reactive_studio
- * by Dmitriy Bushin dima.bushin@gmail.com
- *
- * Thanks to Codrops http://tympanus.net/codrops for the inspiration and ideas.
+ * Thanks to Codrops http://tympanus.net/codrops
+ * for the inspiration and ideas.
  */
 
 ;(function ( $, window, document, undefined ) {
@@ -35,7 +32,7 @@
 				position : 'left',
 				size     : '300px',
 				fx       : 'push',
-				duration : 0.5, // time of transition in seconds.
+				duration : 0.65, // time of transition in seconds.
 				easing   : 'cubic-bezier(.16, .68, .43, .99)'
 			},
 		},
@@ -86,7 +83,14 @@
 			};
 		};
 
-		this._cssTransition = function(duration, easing) {
+		this._cssTransitionAll = function(duration, easing) {
+			return {
+				webkitTransition: 'all '+duration+'s '+easing,
+				transition: 'all '+duration+'s '+easing
+			};
+		};
+
+		this._cssTransitionTransform = function(duration, easing) {
 			return {
 				webkitTransition: '-webkit-transform '+duration+'s '+easing,
 				transition: 'transform '+duration+'s '+easing
@@ -179,8 +183,14 @@
 			options.css.closed.panel = $.extend(
 				{},
 				// {visibility: 'visible'},
+				this._cssTransitionAll(duration, easing),
 				this._cssTranslate3d(p.closed.x, p.closed.y, 0),
 				p.panelCssRules
+			);
+
+			options.css.closed.pusher = $.extend(
+				{},
+				this._cssTransitionTransform(duration, easing)
 			);
 
 			options.inPusher  = false;
@@ -203,14 +213,20 @@
 			options.css.opened.panel = $.extend(
 				{},
 				{visibility: 'visible', zIndex: 1},
-				this._cssTransition(duration, easing),
+				this._cssTransitionTransform(duration, easing),
 				p.panelCssRules
 			);
 
 			options.css.closed.panel = $.extend(
 				{},
 				{zIndex: 1},
+				this._cssTransitionAll(duration, easing),
 				p.panelCssRules
+			);
+
+			options.css.closed.pusher = $.extend(
+				{},
+				this._cssTransitionTransform(duration, easing)
 			);
 
 			options.inPusher  = false;
@@ -232,15 +248,21 @@
 			options.css.opened.panel = $.extend(
 				{},
 				{visibility: 'visible'},
-				this._cssTransition(duration, easing),
+				this._cssTransitionTransform(duration, easing),
 				this._cssTranslate3d(p.closed.x, p.closed.y, 0),
 				p.panelCssRules
 			);
 
 			options.css.closed.panel = $.extend(
 				{},
+				this._cssTransitionAll(duration, easing),
 				this._cssTranslate3d(p.closed.x, p.closed.y, 0),
 				p.panelCssRules
+			);
+
+			options.css.closed.pusher = $.extend(
+				{},
+				this._cssTransitionTransform(duration, easing)
 			);
 
 			options.inPusher  = true;
@@ -262,7 +284,7 @@
 			options.css.opened.panel = $.extend(
 				{},
 				{visibility: 'visible', zIndex: 1},
-				this._cssTransition(duration, easing),
+				this._cssTransitionTransform(duration, easing),
 				this._cssTranslate3d(0, 0, 0),
 				p.panelCssRules
 			);
@@ -270,8 +292,14 @@
 			options.css.closed.panel = $.extend(
 				{},
 				{zIndex: 1},
+				this._cssTransitionAll(duration, easing),
 				this._cssTranslate3d(p.closed.x, p.closed.y, 0),
 				p.panelCssRules
+			);
+
+			options.css.closed.pusher = $.extend(
+				{},
+				this._cssTransitionTransform(duration, easing)
 			);
 
 			options.inPusher  = false;
@@ -293,7 +321,7 @@
 			options.css.opened.panel = $.extend(
 				{},
 				{visibility: 'visible', zIndex: 1},
-				this._cssTransition(duration, easing),
+				this._cssTransitionTransform(duration, easing),
 				this._cssTranslate3d(0, 0, 0),
 				p.panelCssRules
 			);
@@ -301,8 +329,14 @@
 			options.css.closed.panel = $.extend(
 				{},
 				{zIndex: 1},
+				this._cssTransitionAll(duration, easing),
 				this._cssTranslate3d(p.closed.x, p.closed.y, 0),
 				p.panelCssRules
+			);
+
+			options.css.closed.pusher = $.extend(
+				{},
+				this._cssTransitionTransform(duration, easing)
 			);
 
 			options.inPusher  = false;
@@ -333,7 +367,7 @@
 			options.css.opened.panel = $.extend(
 				{},
 				{visibility: 'visible'},
-				this._cssTransition(duration, easing),
+				this._cssTransitionTransform(duration, easing),
 				this._cssTranslate3d(0, 0, 0),
 				p.panelCssRules
 			);
@@ -341,8 +375,14 @@
 			options.css.closed.panel = $.extend(
 				{},
 				{opacity: 1},
+				this._cssTransitionAll(duration, easing),
 				this._cssTranslate3d(p.closed.x, p.closed.y, 0),
 				p.panelCssRules
+			);
+
+			options.css.closed.pusher = $.extend(
+				{},
+				this._cssTransitionTransform(duration, easing)
 			);
 
 			options.inPusher  = false;
@@ -374,7 +414,7 @@
 			options.css.opened.panel = $.extend(
 				{},
 				{visibility: 'visible', opacity: 1, zIndex: 1},
-				this._cssTransition(duration, easing),
+				this._cssTransitionTransform(duration, easing),
 				this._cssTranslate3d(0, 0, 0),
 				p.panelCssRules
 			);
@@ -382,8 +422,14 @@
 			options.css.closed.panel = $.extend(
 				{},
 				{opacity: 1, zIndex: 1},
+				this._cssTransitionAll(duration, easing),
 				this._cssTranslate3d(0, 0, '-300px'),
 				p.panelCssRules
+			);
+
+			options.css.closed.pusher = $.extend(
+				{},
+				this._cssTransitionTransform(duration, easing)
 			);
 
 			options.inPusher  = false;
@@ -398,17 +444,23 @@
 		var self = this;
 
 		$('.' + panelClass).each(function() {
-			var optionsFromHTML = {
-					position: $(this).attr('data-position'),
-					size: $(this).attr('data-size'),
-					fx: $(this).attr('data-fx'),
-					duration: $(this).attr('data-duration'),
-					html: $(this).clone().wrap('<div>').parent().html()
+			var $p = $(this),
+				optionsFromHTML = {
+					position: $p.attr('data-position'),
+					size:     $p.attr('data-size'),
+					fx:       $p.attr('data-fx'),
+					duration: $p.attr('data-duration'),
+					html:     $p.clone().wrap('<div>').parent().html()
 				},
-				o = $.extend( {},
+				o = $.extend(
+					{},
 					defaults.panel,
 					optionsFromHTML
 				);
+
+			if (o.size === 'auto') {
+				o.size = (o.position === 'left' || o.position === 'right')? $p.width()+'px': $p.height()+'px';
+			};
 
 			if (!(o.fx in Fx)) {
 				console.log(pluginName + ' error: fx with name ' + o.fx + ' does not exists. Sorry');
@@ -430,7 +482,6 @@
 		this.fx = new Fx(); // Get fx methods
 		this.panels = new Panels(classes.panel, this.fx); // Get panels
 
-		console.log(this.panels);
         var sidy = this;
 		sidy.init();
 	};
@@ -477,10 +528,11 @@
 			});
 		},
 
-		openPanel: function(event, idPanelToOpen, options) {
+		openPanel: function(event, idPanel, options) {
             var sidy = this,
-				$panel = $("#"+idPanelToOpen),
-				$container = $('.'+classes.container);
+				$container = $('.'+classes.container),
+				$panel     = $("#"+idPanel),
+				$pusher    = $('.'+classes.pusher);
 
             // Some magic with disabling multiple events.
             event.stopPropagation();
@@ -488,12 +540,15 @@
 
             // Enable panel, apply classes for opening panel with fx.
             $panel.removeClass(classes.disabled);
-			$('.'+classes.container).css(options.css.opened.container);
             setTimeout(function() {
-				$('.'+classes.container).addClass(classes.opened);
-				$panel.attr('style', '').css(options.css.opened.panel);
+				$container
+					.css(options.css.opened.container)
+					.addClass(classes.opened);
+				$panel.css(options.css.opened.panel);
 				setTimeout(function() {
-					$('.'+classes.pusher).attr('style', '').css(options.css.opened.pusher);
+					$pusher
+						.css(options.css.closed.pusher)
+						.css(options.css.opened.pusher);
 				}, 25);
             }, 1);
 
@@ -502,25 +557,30 @@
             // Close panel if there is a click in nonactive panel area.
             $(document).on(eventtype, function(evt){
                 if (! hasParentClass(evt.target, classes.panel)) {
-                    sidy.closePanel($panel, options);
+                    sidy.closePanel(idPanel, options);
                     $(this).off();
                 };
             });
 
             // Close panel if there is a close- button or link.
             sidy.$buttonsClose.on(eventtype, function(event) {
-                sidy.closePanel($panel, options);
+                sidy.closePanel(idPanel, options);
                 $(this).off();
             });
         },
 
-        closePanel: function($panel, options) {
+        closePanel: function(idPanel, options) {
+			var $container = $('.'+classes.container),
+				$panel     = $("#"+idPanel),
+				$pusher    = $('.'+classes.pusher);
+
+            $container.removeClass(classes.opened);
             $panel.attr('style', '').css(options.css.closed.panel);
-            $('.'+classes.container).removeClass(classes.opened);
-			$('.'+classes.pusher).attr('style', '').css(options.css.closed.pusher);
+			$pusher.attr('style', '').css(options.css.closed.pusher);
 
             setTimeout(function() {
-					$('.'+classes.container).attr('style', '');
+					$container.attr('style', '');
+					$pusher.attr('style', '');
                     $panel.addClass(classes.disabled);
                 }, options.duration*1000 // duration of transition in milliseconds
             );
