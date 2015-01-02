@@ -1,0 +1,16 @@
+{
+  "name": "Sidy",
+  "version": "1.1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/reactivestudio/Sidy.js.git"
+  },
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-cli": ">= 0.1.6",
+    "grunt-contrib-uglify": "~0.7.0",
+    "grunt-compass-multiple": "~0.2.1",
+    "grunt-contrib-uglify": "~0.5.0",
+    "grunt-contrib-copy": "~0.7.0"
+  }
+}

@@ -1,0 +1,101 @@
+/* line 4, ../src/scss/sidy.scss */
+*,
+*:after,
+*::before {
+  -moz-box-sizing: border-box;
+  box-sizing: border-box; }
+
+/* line 11, ../src/scss/sidy.scss */
+html,
+body {
+  height: 100%; }
+
+/* line 16, ../src/scss/sidy.scss */
+.sidy__container {
+  position: relative;
+  overflow: hidden;
+  height: 100%; }
+
+/* line 22, ../src/scss/sidy.scss */
+.sidy__pusher {
+  position: relative;
+  left: 0;
+  z-index: 99;
+  height: 100%; }
+  /* line 28, ../src/scss/sidy.scss */
+  .sidy__pusher::after {
+    content: '';
+    position: absolute;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 0;
+    background: rgba(0, 0, 0, 0.15);
+    opacity: 0;
+    -moz-transition: opacity 0.5s, width 0.1s 0.5s, height 0.1s 0.5s;
+    -o-transition: opacity 0.5s, width 0.1s 0.5s, height 0.1s 0.5s;
+    -webkit-transition: opacity 0.5s, width 0.1s, height 0.1s;
+    -webkit-transition-delay: 0s, 0.5s, 0.5s;
+    transition: opacity 0.5s, width 0.1s 0.5s, height 0.1s 0.5s; }
+
+/* line 39, ../src/scss/sidy.scss */
+.sidy__content {
+  position: relative;
+  overflow-y: auto;
+  height: 100%; }
+
+/* line 45, ../src/scss/sidy.scss */
+.sidy__panel {
+  position: absolute;
+  overflow: auto;
+  visibility: hidden;
+  z-index: 100;
+  	/*background: #333332;
+  	-webkit-box-shadow: inset -10px 0 6px -9px rgba(0, 0, 0, .7);
+      -moz-box-shadow: inset -10px 0 6px -9px rgba(0, 0, 0, .7);
+      box-shadow: inset -10px 0 6px -9px rgba(0, 0, 0, .7);*/ }
+  /* line 57, ../src/scss/sidy.scss */
+  .sidy__panel::after {
+    position: absolute;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    content: '';
+    opacity: 1;
+    -moz-transition: opacity 0.5s;
+    -o-transition: opacity 0.5s;
+    -webkit-transition: opacity 0.5s;
+    transition: opacity 0.5s; }
+
+/* line 70, ../src/scss/sidy.scss */
+.sidy--opened .sidy__pusher::after {
+  opacity: 1;
+  width: 100%;
+  height: 100%;
+  -moz-transition: opacity 0.5s;
+  -o-transition: opacity 0.5s;
+  -webkit-transition: opacity 0.5s;
+  transition: opacity 0.5s; }
+/* line 77, ../src/scss/sidy.scss */
+.sidy--opened .sidy__panel::after {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  -moz-transition: opacity 0.5s, width 0.1s 0.5s, height 0.1s 0.5s;
+  -o-transition: opacity 0.5s, width 0.1s 0.5s, height 0.1s 0.5s;
+  -webkit-transition: opacity 0.5s, width 0.1s, height 0.1s;
+  -webkit-transition-delay: 0s, 0.5s, 0.5s;
+  transition: opacity 0.5s, width 0.1s 0.5s, height 0.1s 0.5s; }
+
+/* line 86, ../src/scss/sidy.scss */
+.sidy--after-none::after {
+  display: none; }
+
+/* line 90, ../src/scss/sidy.scss */
+.sidy--to-open:focus {
+  outline: none !important;
+  /* overrides chrome default focus outline */ }

@@ -1,0 +1,92 @@
+@import "compass/css3/transition";
+@import "compass/layout/stretching";
+
+*,
+*:after,
+*::before {
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+html,
+body {
+	height: 100%;
+}
+
+.sidy__container {
+	position: relative;
+	overflow: hidden;
+	height: 100%;
+}
+
+.sidy__pusher {
+	position: relative;
+	left: 0;
+	z-index: 99;
+	height: 100%;
+
+	&::after {
+		content: '';
+		position: absolute;
+		@include stretch(0, 0, false, 0);
+		height: 0;
+		background: rgba(0,0,0,0.15);
+		opacity: 0;
+		@include transition(opacity 0.5s, width 0.1s 0.5s, height 0.1s 0.5s);
+	}
+}
+
+.sidy__content {
+	position: relative;
+	overflow-y: auto;
+	height: 100%;
+}
+
+.sidy__panel {
+	position: absolute;
+	overflow: auto;
+
+	visibility: hidden;
+	z-index: 100;
+
+	/*background: #333332;
+	-webkit-box-shadow: inset -10px 0 6px -9px rgba(0, 0, 0, .7);
+    -moz-box-shadow: inset -10px 0 6px -9px rgba(0, 0, 0, .7);
+    box-shadow: inset -10px 0 6px -9px rgba(0, 0, 0, .7);*/
+
+    &::after {
+		position: absolute;
+		@include stretch(0, 0, false, false);
+		width: 100%;
+		height: 100%;
+		background: rgba(0,0,0,0.2);
+		content: '';
+		opacity: 1;
+		@include transition(opacity 0.5s);
+    }
+}
+
+.sidy--opened {
+    .sidy__pusher::after {
+        opacity: 1;
+		width: 100%;
+        height: 100%;
+        @include transition(opacity 0.5s);
+    }
+
+    .sidy__panel::after {
+        opacity: 0;
+        width: 0;
+        height: 0;
+
+        @include transition(opacity 0.5s, width 0.1s 0.5s, height 0.1s 0.5s);
+    }
+}
+
+.sidy--after-none::after {
+	display: none;
+}
+
+.sidy--to-open:focus {
+   outline:none !important; /* overrides chrome default focus outline */
+}
