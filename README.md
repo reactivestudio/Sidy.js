@@ -12,12 +12,9 @@ Features
 ------------
  - Uses CSS3 transforms & transitions
  - Smooth performance on mobile devices
+ - Custom settings for panels: position, size, effect
  - an API for custom open and close panel control
  - Panel closes when the site overlay is selected
- - Position: left, top, right
- - Size: px, %, 'auto'
- - Effects: slide_overlay, reveal, push, slide_along, slide_reverse, scale_down, scale_up
-
 
 Requirements
 ------------
@@ -39,7 +36,7 @@ Once you’ve got `dist/sidy.js` and `dist/sidy.css`  into your project’s Java
 <!DOCTYPE html>
 <html>
   <head>
-      <link rel='stylesheet' type='text/css' href='sidy.css'/>
+      <link rel='stylesheet' type='text/css' href='css/sidy.css'/>
   </head>
   <body>
 
@@ -55,21 +52,21 @@ Once you’ve got `dist/sidy.js` and `dist/sidy.css`  into your project’s Java
 Basic Usage
 -----------
 
-How does it work? Just add `data-sr` to an element, and it will reveal as it enters the viewport.
+How does it work? Just add `<nav id='your-panel-id'></nav>` above the `div.sidy__content` and add `.sidy--to-open`, `.sidy--to-close` classes to an opening and closing elements. Also you need to add `data-panel='your-panel-id'` to openning element. That's all.
 ```html
 <p data-sr> Chips Ahoy! </p>
 ```
 
-Taking Control
+Panel Settings
 --------------
 
-You guessed it, the `data-sr` attribute is waiting for _you_ to describe the type of animation you want. It’s as simple as using a few **keywords** and natural language.
-```html
-<div data-sr="enter left please, and hustle 20px"> Foo </div>
-<div data-sr="wait 2.5s and then ease-in-out 100px"> Bar </div>
-<div data-sr="enter bottom and scale up 20% over 2s"> Baz </div>
-```
-What you enter into the `data-sr` attribute is parsed for specific words:
+You can use custom settings for panels
+ – Position: left, top, right
+ - Size: px, %, 'auto'
+ - Effects: slide_overlay, reveal, push, slide_along, slide_reverse, scale_down, scale_up
 
-- **Keywords** that expect to be followed by a **value**. (e.g. move 50px)
-- **Sugar** (optional) for fun and comprehension. (e.g. and, then, please, etc.)
+```html
+<nav data-position="left" data-size='300px' data-fx="slide_overlay"> Foo </nav>
+<nav data-position="top" data-size='30%' data-fx="push"> Bar </nav>
+<nav data-position="right" data-size='auto' data-fx="reveal"> Baz </nav>
+```
