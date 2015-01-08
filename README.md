@@ -12,9 +12,11 @@ Features
 ------------
  - Uses CSS3 transforms & transitions
  - Smooth performance on mobile devices
- <!-- – an API for custom open and close panel control -->
+ – an API for custom open and close panel control
  - Panel closes when the site overlay is selected
- - Custom panels settings. Position: left, top, right. Size: px, %, 'auto'. Effects: slide_overlay, reveal, push, slide_along, slide_reverse, scale_down, scale_up
+ - Position: left, top, right
+ – Size: px, %, 'auto'
+ - Effects: slide_overlay, reveal, push, slide_along, slide_reverse, scale_down, scale_up
 
 
 Requirements
@@ -29,7 +31,7 @@ Please use which ever is most comfortable:
 
 - [Download ZIP](https://github.com/reactivestudio/Sidy.js/archive/master.zip)
 - `git clone github.com/reactivestudio/Sidy.js.git`
-- `bower install scrollReveal.js`
+- `bower install Sidy.js`
 
 Once you’ve got `scrollReveal.min.js` into your project’s JavaScript directory, let’s instantiate it!
 
