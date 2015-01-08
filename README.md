@@ -12,10 +12,10 @@ Features
 ------------
  - Uses CSS3 transforms & transitions
  - Smooth performance on mobile devices
- – an API for custom open and close panel control
+ - an API for custom open and close panel control
  - Panel closes when the site overlay is selected
  - Position: left, top, right
- – Size: px, %, 'auto'
+ - Size: px, %, 'auto'
  - Effects: slide_overlay, reveal, push, slide_along, slide_reverse, scale_down, scale_up
 
 
