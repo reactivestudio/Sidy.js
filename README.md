@@ -39,11 +39,11 @@ Once you’ve got `dist/sidy.js` and `dist/sidy.css`  into your project’s Java
       <link rel='stylesheet' type='text/css' href='css/sidy.css'/>
   </head>
   <body>
-
-    <div class="sidy__content">
+    <div class="sidy">
+      <div class="sidy__content">
         <!-- All your stuff up here... -->
+      </div>
     </div>
-
     <script src='/js/sidy.js'></script>
   </body>
 </html>
@@ -55,6 +55,7 @@ Basic Usage
 How does it work? Just add `<nav id='your-panel-id'></nav>` above the `div.sidy__content` and add `.sidy--to-open`, `.sidy--to-close` classes to an opening and closing elements. Also you need to add `.sidy__panel` class and `data-panel='your-panel-id'` to openning element. That's all.
 ```html
 <body>
+  <div class="sidy">
     <nav class='sidy__panel' id='your-panel-id'>
         <!-- All your panel stuff up here... -->
     </nav>
@@ -62,8 +63,8 @@ How does it work? Just add `<nav id='your-panel-id'></nav>` above the `div.sidy_
         <!-- All your content/viewport stuff up here... -->
         <button data-panel="your-panel-id" class="sidy--to-open">Open me</button>
     </div>
-
-    <script src='/js/sidy.js'></script>
+  </div>
+  <script src='/js/sidy.js'></script>
 </body>
 ```
 
