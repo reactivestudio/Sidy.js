@@ -72,8 +72,7 @@ Panel Settings
 --------------
 
 You can use custom settings for panels
-
- – Position: left, top, right
+ - Position: left, top, right
  - Size: px, %, 'auto'
  - Effects: slide_overlay, reveal, push, slide_along, slide_reverse, scale_down, scale_up
 
