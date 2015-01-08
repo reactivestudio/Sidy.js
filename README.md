@@ -3,7 +3,7 @@
 
 Sidy.js is an off-, on- canvas navigation panels using CSS transforms & transitions. This project was inspired by the SidebarTransitions project seen on [SidebarTransitions](https://github.com/codrops/SidebarTransitions)
 
-- **3.5KB** minified and Gzipped
+- **3.3KB** minified and Gzipped
 -An open-source project by [Reactive Design Studio](https://twitter.com/reactive_studio)
 
 
@@ -12,8 +12,9 @@ Features
 ------------
  - Uses CSS3 transforms & transitions
  - Smooth performance on mobile devices
- – an API for cuxtom open and close panel control
+ <!-- – an API for custom open and close panel control -->
  - Panel closes when the site overlay is selected
+ - Custom panels settings. Position: left, top, right. Size: px, %, 'auto'. Effects: slide_overlay, reveal, push, slide_along, slide_reverse, scale_down, scale_up
 
 
 Requirements
