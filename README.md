@@ -31,23 +31,23 @@ Please use which ever is most comfortable:
 
 - [Download ZIP](https://github.com/reactivestudio/Sidy.js/archive/master.zip)
 - `git clone github.com/reactivestudio/Sidy.js.git`
-- `bower install Sidy.js`
+- `bower install sidy.js`
 
-Once you’ve got `scrollReveal.min.js` into your project’s JavaScript directory, let’s instantiate it!
+Once you’ve got `dist/sidy.js` and `dist/sidy.css`  into your project’s JavaScript and CSS directories, let’s instantiate it!
 
 ```html
 <!DOCTYPE html>
 <html>
+  <head>
+      <link rel='stylesheet' type='text/css' href='sidy.css'/>
+  </head>
   <body>
 
-    <!-- All your stuff up here... -->
+    <div class="sidy__content">
+        <!-- All your stuff up here... -->
+    </div>
 
-    <script src='/js/scrollReveal.min.js'></script>
-    <script>
-
-      window.sr = new scrollReveal();
-
-    </script>
+    <script src='/js/sidy.js'></script>
   </body>
 </html>
 ```
