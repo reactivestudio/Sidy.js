@@ -1,0 +1,29 @@
+{
+  "name": "Sidy.js",
+  "version": "1.1.0",
+  "homepage": "https://github.com/reactivestudio/Sidy.js",
+  "authors": [
+    "Dmitriy Bushin <dima.bushin@gmail.com>"
+  ],
+  "description": "jQuery plugin for Off-, On- canvas panels with CSS3 animations",
+  "main": [
+    "dist/sidy.js",
+    "dist/sidy.css",
+    "dist/normalize.css"
+  ],
+  "keywords": [
+    "Sidy",
+    "Off-canvas",
+    "animation",
+    "CSS3",
+    "transition",
+    "JavaScript"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "app/bower_components"
+  ]
+}
