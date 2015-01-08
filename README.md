@@ -54,7 +54,17 @@ Basic Usage
 
 How does it work? Just add `<nav id='your-panel-id'></nav>` above the `div.sidy__content` and add `.sidy--to-open`, `.sidy--to-close` classes to an opening and closing elements. Also you need to add `data-panel='your-panel-id'` to openning element. That's all.
 ```html
-<p data-sr> Chips Ahoy! </p>
+<body>
+    <nav id='your-panel-id'>
+        <!-- All your panel stuff up here... -->
+    </nav>
+    <div class="sidy__content">
+        <!-- All your content/viewport stuff up here... -->
+        <button data-panel="your-panel-id" class="sidy--to-open">Open me</button>
+    </div>
+
+    <script src='/js/sidy.js'></script>
+</body>
 ```
 
 Panel Settings
@@ -66,7 +76,7 @@ You can use custom settings for panels
  - Effects: slide_overlay, reveal, push, slide_along, slide_reverse, scale_down, scale_up
 
 ```html
-<nav data-position="left" data-size='300px' data-fx="slide_overlay"> Foo </nav>
-<nav data-position="top" data-size='30%' data-fx="push"> Bar </nav>
-<nav data-position="right" data-size='auto' data-fx="reveal"> Baz </nav>
+<nav data-position="left" data-size='300px' data-fx="slide_overlay" id='foo'> Foo </nav>
+<nav data-position="top" data-size='30%' data-fx="push" id='bar'> Bar </nav>
+<nav data-position="right" data-size='auto' data-fx="reveal" id='baz'> Baz </nav>
 ```
