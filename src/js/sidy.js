@@ -47,6 +47,7 @@
             afterNone:     pluginCssClass + '--after-none',
             toOpen:        pluginCssClass + '--to-open',
             toClose:       pluginCssClass + '--to-close',
+            statusClosed:  pluginCssClass + '--panels-closed',
 		},
 
 		mobileCheck = function() {
@@ -540,6 +541,9 @@
 
             // Enable panel, apply classes for opening panel with fx.
             $panel.removeClass(classes.disabled);
+            $('body')
+            	.removeClass(classes.statusClosed)
+            	.addClass('sidy--'+idPanel+'-opened');
             setTimeout(function() {
 				$container
 					.css(options.css.opened.container)
@@ -577,6 +581,9 @@
             $container.removeClass(classes.opened);
             $panel.attr('style', '').css(options.css.closed.panel);
 			$pusher.attr('style', '').css(options.css.closed.pusher);
+			$('body')
+            	.removeClass('sidy--'+idPanel+'-opened')
+            	.addClass(classes.statusClosed);
 
             setTimeout(function() {
 					$container.attr('style', '');
