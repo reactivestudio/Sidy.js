@@ -502,6 +502,9 @@
 			$('.' + classes.pusher).html(contentHTML);
 
 
+
+			$('body').addClass(classes.statusClosed);
+
 			// Panels and add some classes.
 			$.each(sidy.panels, function(id, options) {
 				var $pusher  = $('.' + classes.pusher),
